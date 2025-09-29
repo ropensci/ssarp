@@ -16,10 +16,10 @@ knitr::opts_chunk$set(
 # ssarp <a href="https://docs.ropensci.org/ssarp/index.html"><img src="man/figures/logo.png" align="right" height="300" alt="ssarp website" /></a>
 
 <!-- badges: start -->
-  [![Codecov test coverage](https://codecov.io/gh/ropensci/ssarp/branch/main/graph/badge.svg)](https://codecov.io/gh/ropensci/ssarp?branch=main)
-  [![R-CMD-check](https://github.com/ropensci/ssarp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/ssarp/actions/workflows/R-CMD-check.yaml)
-  [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-  [![Status at rOpenSci Software Peer Review](https://badges.ropensci.org/685_status.svg)](https://github.com/ropensci/software-review/issues/685)
+[![Codecov test coverage](https://codecov.io/gh/ropensci/ssarp/branch/main/graph/badge.svg)](https://codecov.io/gh/ropensci/ssarp?branch=main)
+[![R-CMD-check](https://github.com/ropensci/ssarp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/ssarp/actions/workflows/R-CMD-check.yaml)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Status at rOpenSci Software Peer Review](https://badges.ropensci.org/685_status.svg)](https://github.com/ropensci/software-review/issues/685)
 <!-- badges: end -->
 
 `ssarp` (Species-/Speciation-Area Relationship Projector) is an R package that 
