@@ -34,7 +34,7 @@
 #' #                           hasCoordinate = TRUE,
 #' #                           limit = 10000)
 #' dat <- read.csv(system.file("extdata",
-#'                             "ssarp_Example_Dat.csv",
+#'                             "SSARP_Example_Dat_Dat.csv",
 #'                             package = "ssarp"))
 #' land <- find_land(occurrences = dat)
 #' areas <- find_areas(occs = land)
@@ -107,7 +107,7 @@ create_spar <- function(occurrences, npsi = 1, visualize = FALSE) {
   aic_scores[1] <- stats::AIC(linear)
   # Name the list element in case the user wants to examine the AIC scores
   names(aic_scores)[1] <- "Linear"
-  
+
   # Empty list to populate with models
   model_objs <- list()
   # Linear model is already created above
@@ -129,7 +129,7 @@ create_spar <- function(occurrences, npsi = 1, visualize = FALSE) {
       aic_scores[i + 1] <- stats::AIC(seg)
       # Name the list element
       names(aic_scores)[i + 1] <- paste0("BP", i)
-      
+
       # Add to model list too
       # Since the first index is always linear, use i+1
       model_objs[[i + 1]] <- seg
