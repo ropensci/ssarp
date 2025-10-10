@@ -110,9 +110,8 @@ Ecology and Evolution, 5: 701-707.</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Read tree from Patton et al. (2021), trimmed to Caribbean species</span></span></span>
 <span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ape</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ape/man/read.tree.html" class="external-link">read.tree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span></span>
-<span class="r-in"><span>                             <span class="st">"Patton_Anolis_trimmed.tree"</span>,</span></span>
+<span class="r-in"><span>                             <span class="st">"Patton_Anolis_Trimmed.tree"</span>,</span></span>
 <span class="r-in"><span>                             package <span class="op">=</span> <span class="st">"ssarp"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>empty character string.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Event data file from an external BAMM run</span></span></span>
 <span class="r-in"><span><span class="va">event_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span></span>
@@ -120,12 +119,21 @@ Ecology and Evolution, 5: 701-707.</p></li>
 <span class="r-in"><span>                           package <span class="op">=</span> <span class="st">"ssarp"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">edata</span> <span class="op">&lt;-</span> <span class="fu">BAMMtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BAMMtools/man/getEventData.html" class="external-link">getEventData</a></span><span class="op">(</span>phy <span class="op">=</span> <span class="va">tree</span>, eventdata <span class="op">=</span> <span class="va">event_data</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in tabulate(phy$edge, n + m):</span> 'bin' must be numeric or a factor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading event datafile:  /home/runner/work/_temp/Library/ssarp/extdata/event_data_Patton_Anolis.txt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 		...........</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Read a total of 1000 samples from posterior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Discarded as burnin: GENERATIONS &lt;  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Analyzing  1000  samples from posterior</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Setting recursive sequence on tree...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Done with recursive sequence</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">occ_speciation</span> <span class="op">&lt;-</span> <span class="fu">estimate_bamm</span><span class="op">(</span>label_type <span class="op">=</span> <span class="st">"epithet"</span>,</span></span>
 <span class="r-in"><span>                                 occurrences <span class="op">=</span> <span class="va">areas</span> ,</span></span>
 <span class="r-in"><span>                                 edata <span class="op">=</span> <span class="va">edata</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'edata' not found</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
