@@ -37,7 +37,7 @@
 #'
 #' # Read tree from Patton et al. (2021), trimmed to Caribbean species
 #' tree <- ape::read.tree(system.file("extdata",
-#'                              "Patton_Anolis_trimmed.tree",
+#'                              "Patton_Anolis_Trimmed.tree",
 #'                              package = "ssarp"))
 #'
 #' # Event data file from an external BAMM run
