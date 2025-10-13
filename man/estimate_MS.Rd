@@ -3,7 +3,7 @@
 \name{estimate_ms}
 \alias{estimate_ms}
 \alias{estimate_MS}
-\title{Get speciation rates following equation 4 in Magallon and Sanderson (2001)}
+\title{Get speciation rates following equation 4 in Magallón and Sanderson (2001)}
 \usage{
 estimate_ms(tree, label_type = "binomial", occurrences)
 
@@ -27,7 +27,7 @@ A dataframe that includes speciation rates for each island in the
 user-provided occurrence record dataframe.
 }
 \description{
-Use methodology from Magallon and Sanderson (2001) to estimate speciation
+Use methodology from Magallón and Sanderson (2001) to estimate speciation
 rates using a user-provided phylogeny and output a dataframe for use in
 ssarp's speciation-area relationship pipeline. This method also removes any
 species rows without rates (this is most likely to occur when the tree does
@@ -57,7 +57,7 @@ occ_speciation <- estimate_ms(tree = tree,
 }
 \references{
 \itemize{
-\item Magallόn, S. & Sanderson, M.J. (2001). Absolute Diversification Rates in
+\item Magallón, S. & Sanderson, M.J. (2001). Absolute Diversification Rates in
 Angiosperm Clades. Evolution, 55(9): 1762-1780.
 }
 }

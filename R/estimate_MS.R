@@ -1,6 +1,6 @@
-#' Get speciation rates following equation 4 in Magallon and Sanderson (2001)
+#' Get speciation rates following equation 4 in Magallón and Sanderson (2001)
 #'
-#' Use methodology from Magallon and Sanderson (2001) to estimate speciation
+#' Use methodology from Magallón and Sanderson (2001) to estimate speciation
 #' rates using a user-provided phylogeny and output a dataframe for use in
 #' ssarp's speciation-area relationship pipeline. This method also removes any
 #' species rows without rates (this is most likely to occur when the tree does
@@ -17,7 +17,7 @@
 #' @return A dataframe that includes speciation rates for each island in the
 #' user-provided occurrence record dataframe.
 #' @references
-#' - Magallόn, S. & Sanderson, M.J. (2001). Absolute Diversification Rates in
+#' - Magallón, S. & Sanderson, M.J. (2001). Absolute Diversification Rates in
 #' Angiosperm Clades. Evolution, 55(9): 1762-1780.
 #' @examples
 #' # The GBIF key for the Anolis genus is 8782549

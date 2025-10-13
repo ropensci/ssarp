@@ -369,7 +369,7 @@ SpARs](https://docs.ropensci.org/ssarp/articles/Spatial_Autocorrelation.html).
     the tip labels are simply species epithets or full scientific
     names), and the dataframe obtained in Step 3 to add tip speciation
     rates using the DR statistic (Jetz et al. 2012) or the lambda
-    calculation for crown groups from Magallόn and Sanderson (2001)
+    calculation for crown groups from Magallón and Sanderson (2001)
     respectively to the occurrence dataframe. The user may also choose
     to estimate tip speciation rates from a BAMM analysis (Rabosky 2014)
     by using `estimate_bamm()` with a classifier that describes your tip
@@ -412,7 +412,7 @@ polygons nested within others or polygons with holes in the middle.
 - Jetz, W., Thomas, G.H, Joy, J.B., Harmann, K., & Mooers, A.O. (2012).
   The global diversity of birds in space and time. *Nature*, 491:
   444-448.
-- Magallόn, S. & Sanderson, M.J. (2001). Absolute Diversification Rates
+- Magallón, S. & Sanderson, M.J. (2001). Absolute Diversification Rates
   in Angiosperm Clades. *Evolution*, 55(9): 1762-1780.
 - Rabosky, D.L. (2014). Automatic Detection of Key Innovations, Rate
   Shifts, and Diversity-Dependence on Phylogenetic Trees. PLOS ONE,
