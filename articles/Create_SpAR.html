@@ -144,7 +144,7 @@ trimmed to include only anoles found on islands in the Caribbean.</div>
 <p>Now that we have a phylogenetic tree, we can estimate tip speciation
 rates for use in our speciation-area relationship. <em>ssarp</em>
 includes three methods for estimating tip speciation rates: BAMM
-(Rabosky 2014), the lambda calculation for crown groups from Magallόn
+(Rabosky 2014), the lambda calculation for crown groups from Magallón
 and Sanderson (2001), and DR (Jetz et al. 2012).</p>
 <p>The <code><a href="../reference/estimate_BAMM.html">ssarp::estimate_bamm()</a></code> function requires a
 <code>bammdata</code> object as input, which must be created using the
@@ -161,7 +161,7 @@ tip speciation rate estimations (Title and Rabosky 2019). The
 from running an adapted version of the “DR_statistic” function from Sun
 and Folk (2020).</p>
 <p>In addition to tip speciation rates, <code>ssarp</code> includes a
-function for calculating the speciation rate for a clade from Magallόn
+function for calculating the speciation rate for a clade from Magallón
 and Sanderson (2001). The <code><a href="../reference/estimate_MS.html">ssarp::estimate_ms()</a></code> function
 uses the <code><a href="https://rdrr.io/pkg/ape/man/subtrees.html" class="external-link">ape::subtrees</a></code> function (Paradis and Schliep 2019)
 to generate all possible subtrees from the user-provided phylogenetic
@@ -172,17 +172,17 @@ of species that comprise an island, the number of subtrees that
 represent that group of species and the root age of each subtree is
 recorded, along with the name and area of the island. The speciation
 rate for each subtree is then calculated following Equation 4 in
-Magallόn and Sanderson (2001). If an island includes multiple subtrees,
+Magallón and Sanderson (2001). If an island includes multiple subtrees,
 the island speciation rate is the average of the calculated speciation
 rates. This average is calculated when the SpAR is plotted.</p>
 <p>In this example, we will use the lambda calculation for crown groups
-from Magallόn and Sanderson (2001) through the
+from Magallón and Sanderson (2001) through the
 <code><a href="../reference/estimate_MS.html">ssarp::estimate_ms()</a></code> function. The “label_type” parameter
 in this function tells <em>ssarp</em> whether the tip labels on the
 given tree include the full species name (binomial) or just the specific
 epithet (epithet).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Calculate tip speciation rates using the lambda calculation for crown groups from Magallon and Sanderson (2001)</span></span>
+<code class="sourceCode R"><span><span class="co"># Calculate tip speciation rates using the lambda calculation for crown groups from Magallón and Sanderson (2001)</span></span>
 <span><span class="va">speciation_occurrences</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_MS.html">estimate_ms</a></span><span class="op">(</span>tree <span class="op">=</span> <span class="va">tree</span>, label_type <span class="op">=</span> <span class="st">"epithet"</span>, occurrences <span class="op">=</span> <span class="va">nocont_dat</span><span class="op">)</span></span></code></pre></div>
 <p>The “speciation_occurrences” object is a dataframe containing island
 areas with their corresponding speciation rate as estimated by the
@@ -237,7 +237,7 @@ segmented regression with one breakpoint.</div>
 </div>
 <p>You will notice that two of the largest islands have a speciation
 rate of zero in this example. This very likely occurred because the
-calculation for speciation rate in Magallόn and Sanderson (2001) that
+calculation for speciation rate in Magallón and Sanderson (2001) that
 <code><a href="../reference/estimate_MS.html">ssarp::estimate_ms()</a></code> uses is based on monophyly, which can
 be disrupted on islands with non-native species occurrence records. When
 using the <code><a href="../reference/estimate_MS.html">ssarp::estimate_ms()</a></code> function to estimate
@@ -255,7 +255,7 @@ global species richness gradients. Ecology Letters, 18: 563–571.</li>
 444-448.</li>
 <li>Losos, J.B. &amp; Schluter, D. (2000). Analysis of an evolutionary
 species-area relationship. Nature, 408: 847-850.</li>
-<li>Magallόn, S. &amp; Sanderson, M.J. (2001). Absolute Diversification
+<li>Magallón, S. &amp; Sanderson, M.J. (2001). Absolute Diversification
 Rates in Angiosperm Clades. Evolution, 55(9): 1762-1780.</li>
 <li>Paradis, E. &amp; Schliep, K. (2019). ape 5.0: an environment for
 modern phylogenetics and evolutionary analyses in R. Bioinformatics, 35:
