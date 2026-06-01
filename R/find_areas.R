@@ -85,6 +85,16 @@ find_areas <- function(
     checkmate::assertNumeric(occs$decimalLongitude)
     checkmate::assertNumeric(occs$decimalLatitude)
   }
+  # If a custom area dataframe is input, ensure that it is a dataframe
+  if(!is.null(area_custom)){
+    checkmate::assertDataFrame(area_custom)
+    
+    # If the custom area dataframe is actually a tibble, it'll pass the above
+    #  check but then the function will return nothing. Give users a warning.
+    if(checkmate::testTibble(area_custom)){
+      cli::cli_alert_warning("Custom areas input is a tibble. Please input a data.frame instead.")
+    }
+  }
   
   # Ensure other columns are correct type
   checkmate::assertCharacter(occs$genericName)
@@ -246,6 +256,10 @@ find_areas <- function(
       }
     }
 
+    # If a tbl_df is input for area_custom, areas is a list instead of a vector
+    # Unlist areas just in case this happens
+    areas <- unlist(areas)
+    
     # Create final dataframe
     occs_final <- cbind(occs, areas)
   } else {

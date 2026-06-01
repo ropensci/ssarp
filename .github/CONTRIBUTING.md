@@ -8,12 +8,20 @@ You can fix typos, spelling mistakes, or grammatical errors in the documentation
 This generally means you'll need to edit [roxygen2 comments](https://roxygen2.r-lib.org/articles/roxygen2.html) in an `.R`, not a `.Rd` file. 
 You can find the `.R` file that generates the `.Rd` by reading the comment in the second line.
 
+### Fixing island database entries
+
+If you are working with *ssarp*'s built-in database of island names, areas, and elevations and notice an issue with any entry in this dataset (e.g., the area for one of the islands in your study system is incorrect, an island in your study system is entirely missing), please feel free to open a pull request after doing the following: (1) make a change directly to `data-raw/island_areas.csv` and (2) run `data-raw/island_areas.R` to replace the old dataset with your newly edited version.
+
 ## Bigger changes
 
 If you want to make a bigger change, it's a good idea to first file an issue and make sure someone from the team agrees that it’s needed. 
 If you’ve found a bug, please file an issue that illustrates the bug with a minimal 
 [reprex](https://www.tidyverse.org/help/#reprex) (this will also help you write a unit test, if needed).
 See tidyverse's guide on [how to create a great issue](https://code-review.tidyverse.org/issues/) for more advice.
+
+### Adding methods for estimating speciation rate or streamlining workflows
+
+We especially welcome users to file issues proposing new methods for estimating speciation rates to be added to *ssarp*. We would value the opportunity to collaborate with folks who are passionate about a particular method! We also welcome users to file issues proposing new additions to the *ssarp* workflow that would allow *ssarp* outputs to integrate seamlessly with other packages that users find useful for further analyses.
 
 ### Pull request process
 

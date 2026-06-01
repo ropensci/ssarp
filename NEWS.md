@@ -1,3 +1,18 @@
+ssarp 0.5.1 (2026-06-01)
+=========================
+
+### DOCUMENTATION FIXES
+
+  * Updated the Create_SAR vignette to include: additional information about how to interpret segmented regression outputs, how to use presence-absence matrices to infer a SAR, and how to use custom inputs with `find_areas()`.
+  * Updated the Create_SpAR vignette to include: additional information about how to interpret segmented regression outputs, a short example using `estimate_bamm()` to estimate speciation rates, and a short example using `estimate_dr()` to estimate speciation rates.
+  * Updated documentation for `create_sar()` and `create_spar()` to include clarification about how the user can specify for only a linear model to run.
+
+### OTHER FIXES
+
+  * Added checkmate verification for using a custom area dataframe with `find_areas()`.
+  * Added information about fixing island database entries, adding methods for estimating speciation rate, and streamlining workflows to `CONTRIBUTING.md`.
+
+
 ssarp 0.5.0 (2025-09-16)
 =========================
 

@@ -16,7 +16,7 @@
 #' `ssarp::estimate_ms()`), or if using a custom dataframe, ensure that it
 #' has the following columns: areas, rate
 #' @param npsi The maximum number of breakpoints to estimate for model
-#' selection.  Default: 1
+#' selection.  If 0 is input, only a linear model will be run. Default: 1
 #' @param visualize (boolean) Whether the plot should be displayed when the
 #' function is called. Default: FALSE
 #' @return A list of class SAR with 5 items including:

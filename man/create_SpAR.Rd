@@ -16,7 +16,7 @@ methods (\code{ssarp::estimate_bamm()}, \code{ssarp::estimate_dr()},
 has the following columns: areas, rate}
 
 \item{npsi}{The maximum number of breakpoints to estimate for model
-selection.  Default: 1}
+selection.  If 0 is input, only a linear model will be run. Default: 1}
 
 \item{visualize}{(boolean) Whether the plot should be displayed when the
 function is called. Default: FALSE}

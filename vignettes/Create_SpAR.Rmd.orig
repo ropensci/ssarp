@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 A speciation-area relationship (SpAR) plots speciation rates against the area of the island on which the associated species live. This vignette, which covers how to create a SpAR using the *ssarp* package, uses knowledge and data generated from [the vignette describing the creation of species-area relationships](https://kmartinet.github.io/ssarp/articles/Create_SAR.html). Code relevant to generating the necessary data for this SpAR example from the species-area relationship (SAR) vignette will be included here, but the reader is encouraged to read [the SAR vignette](https://kmartinet.github.io/ssarp/articles/Create_SAR.html) for additional details.
 
-In this vignette, we will create a SpAR for the lizard genus *Anolis*, as a continuation of the SAR vignette.
+In this vignette, we will create a SpAR for the lizard genus *Anolis*, as a continuation of the SAR vignette. We will focus on using the `ssarp::estimate_ms()` function to estimate per-island speciation rates using the lambda calculation for crown groups from Magallón and Sanderson (2001) for the main example. Additional short examples using `ssarp::estimate_dr()` and `ssarp::estimate_bamm()` for speciation rate estimations are included after the main example.
 
 ## Generate Occurrence Data
 First, we will generate the "nocont_dat" object from the SAR vignette, which includes occurrence records and their associated island names and areas for *Anolis* lizards that live on Caribbean islands.
@@ -54,7 +54,7 @@ nocont_dat <- remove_continents(occs = area_dat)
 ```
 
 
-## Calculate Speciation Rates
+## Estimate Speciation Rates
 The “nocont_dat” object created above can be used with a phylogenetic tree to create a SpAR. This step in the *ssarp* workflow enables the user to determine whether the breakpoint in the SAR corresponds with a threshold for island size at which in situ speciation occurs (see Losos and Schluter 2000). 
 
 The phylogenetic tree for *Anolis* that we will use in this example is a trimmed version of the tree used by Patton et al. (2021). This trimmed tree only includes anoles found on islands in the Caribbean. In order to read the tree, we must use the *ape* R package.
@@ -98,6 +98,58 @@ create_spar(occurrences = speciation_occurrences, npsi = 1, visualize = TRUE)
 
 You will notice that two of the largest islands have a speciation rate of zero in this example. This very likely occurred because the calculation for speciation rate in Magallón and Sanderson (2001) that `ssarp::estimate_ms()` uses is based on monophyly, which can be disrupted on islands with non-native species occurrence records. When using the `ssarp::estimate_ms()` function to estimate speciation rates for a SpAR, it is incredibly important to manually filter the returned occurrence records to remove non-native species.
 
+The `ssarp::create_spar()` function will also output the summary for the best-fit model for the data (displayed above). This summary includes a few important pieces of information to highlight. First, the `Est` column of `psi1.x` displays the location of the breakpoint on the x-axis. Next, the table of `Coefficients of the linear terms` includes estimates (located in the `Estimate` column) for the following terms: the y-intercept (`(Intercept)`), the slope before the breakpoint (`x`), and the slope after the breakpoint (`U1.x`). In this example, to three signifcant figures, we would report that the breakpoint is at 19.9, the slope before the breakpoint is -8.30e-14, and the slope after the breakpoint is 5.71e-03. 
+
+## Estimating Speciation Rates with BAMM and DR
+While the above example focused on using the `ssarp::estimate_ms()` function for estimating per-island speciation rates, *ssarp* also provides functionality for BAMM (Rabosky 2014) and DR (Jetz et al. 2012). These methods are described in detail in the "Estimate Speciation Rates" section above, so this section will focus on providing clear examples for their use in inferring SpARs.
+
+### Estimating Speciation Rates with BAMM
+The `ssarp::estimate_bamm()` function allows users to integrate their `eventdata` results from a `BAMM` run into *ssarp*'s SpAR workflow. More information about `BAMM`(Bayesian Analysis of Macroevolutionary Mixtures) [can be found on their documentation website](http://bamm-project.org/). The output from `BAMMtools::getEventData()` is a required parameter of `ssarp::estimate_bamm()`. The quickstart guide for `BAMMtools` [can also be found on their documentation website](http://bamm-project.org/postprocess.html).
+
+The steps for using `ssarp::estimate_bamm()` as part of the SpAR workflow are as follows:
+
+* Run a `BAMM` analysis using the phylogeny of interest (this requires the `BAMM` application, which is external to R)
+* Read in the event data file from the `BAMM` analysis into R using the `BAMMtools` R package
+* Run `ssarp::estimate_bamm()` with your occurrence record dataset and eventdata object
+
+In this short example, we will use the `nocont_dat` object created in the main example above as the occurrence record input.
+
+```{r }
+# Read in event data file from an external BAMM run
+event_data <- system.file("extdata",
+                          "event_data_Patton_Anolis.txt",
+                           package = "ssarp")
+
+# Run getEventData to import event data
+edata <- BAMMtools::getEventData(phy = tree, eventdata = event_data)
+
+# Run estimate_bamm to associate tip speciation rates with occurrence records
+speciation_occurrences <- estimate_bamm(label_type = "epithet", 
+                                        occurrences = nocont_dat,
+                                        edata = edata)
+                                        
+# Infer SpAR
+create_spar(occurrences = speciation_occurrences, npsi = 1, visualize = FALSE)
+
+```
+
+Note how different the breakpoint and slopes are when `BAMM` tip rates are used to infer the SpAR compared to the first example using methodology from Magallón and Sanderson (2001): 25.05 here versus 19.92 previously for the breakpoint, -7.6x10e-4 versus -8.30e-14 previously for the slope before the breakpoint, and 0.047 versus 5.712e-03 previously for the slope after the breakpoint. The difference between how tip speciation rates are estimated in `BAMM` and how crown group speciation rates are calculated using Equation 4 from Magallón and Sanderson (2001) results in vastly different estimates for the regression parameters.
+
+### Estimating Speciation Rates with DR
+The `ssarp::estimate_dr()` function returns tip speciation rate values obtained from running an adapted version of the “DR_statistic” function from Sun and Folk (2020). This function only requires a phylogenetic tree and occurrence records to estimate tip speciation rates. In this short example, we will use the `nocont_dat` and `tree` objects created during the first example in this vignette.
+
+```{r }
+# Run estimate_dr to associate tip speciation rates with occurrence records
+speciation_occurrences <- estimate_dr(tree = tree,
+                                      label_type = "epithet",
+                                      occurrences = nocont_dat)
+
+# Infer SpAR
+create_spar(occurrences = speciation_occurrences, npsi = 1, visualize = FALSE)
+
+```
+
+Note that when using DR to estimate tip speciation rates, the best-fit model for the SpAR is a linear regression. This result is entirely different compared to when `ssarp::estimate_ms()` and `ssarp::estimate_bamm()` are used, which highlights the importance of considering which method for estimating speciation rates most aligns with the evolutionary history of your system. 
 
 ### Literature Cited
 
