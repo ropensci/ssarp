@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Construct a Speciation-Area Relationship with ssarp • ssarp</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Construct a Speciation-Area Relationship with ssarp">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ssarp</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,13 @@ species-area relationship (SAR) vignette will be included here, but the
 reader is encouraged to read <a href="https://kmartinet.github.io/ssarp/articles/Create_SAR.html" class="external-link">the
 SAR vignette</a> for additional details.</p>
 <p>In this vignette, we will create a SpAR for the lizard genus
-<em>Anolis</em>, as a continuation of the SAR vignette.</p>
+<em>Anolis</em>, as a continuation of the SAR vignette. We will focus on
+using the <code><a href="../reference/estimate_MS.html">ssarp::estimate_ms()</a></code> function to estimate
+per-island speciation rates using the lambda calculation for crown
+groups from Magallón and Sanderson (2001) for the main example.
+Additional short examples using <code><a href="../reference/estimate_DR.html">ssarp::estimate_dr()</a></code> and
+<code><a href="../reference/estimate_BAMM.html">ssarp::estimate_bamm()</a></code> for speciation rate estimations are
+included after the main example.</p>
 </div>
 <div class="section level2">
 <h2 id="generate-occurrence-data">Generate Occurrence Data<a class="anchor" aria-label="anchor" href="#generate-occurrence-data"></a>
@@ -120,7 +126,7 @@ islands.</p>
 <span><span class="va">nocont_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_continents.html">remove_continents</a></span><span class="op">(</span>occs <span class="op">=</span> <span class="va">area_dat</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="calculate-speciation-rates">Calculate Speciation Rates<a class="anchor" aria-label="anchor" href="#calculate-speciation-rates"></a>
+<h2 id="estimate-speciation-rates">Estimate Speciation Rates<a class="anchor" aria-label="anchor" href="#estimate-speciation-rates"></a>
 </h2>
 <p>The “nocont_dat” object created above can be used with a phylogenetic
 tree to create a SpAR. This step in the <em>ssarp</em> workflow enables
@@ -243,6 +249,146 @@ be disrupted on islands with non-native species occurrence records. When
 using the <code><a href="../reference/estimate_MS.html">ssarp::estimate_ms()</a></code> function to estimate
 speciation rates for a SpAR, it is incredibly important to manually
 filter the returned occurrence records to remove non-native species.</p>
+<p>The <code><a href="../reference/create_SpAR.html">ssarp::create_spar()</a></code> function will also output the
+summary for the best-fit model for the data (displayed above). This
+summary includes a few important pieces of information to highlight.
+First, the <code>Est</code> column of <code>psi1.x</code> displays the
+location of the breakpoint on the x-axis. Next, the table of
+<code>Coefficients of the linear terms</code> includes estimates
+(located in the <code>Estimate</code> column) for the following terms:
+the y-intercept (<code>(Intercept)</code>), the slope before the
+breakpoint (<code>x</code>), and the slope after the breakpoint
+(<code>U1.x</code>). In this example, to three signifcant figures, we
+would report that the breakpoint is at 19.9, the slope before the
+breakpoint is -8.30e-14, and the slope after the breakpoint is
+5.71e-03.</p>
+</div>
+<div class="section level2">
+<h2 id="estimating-speciation-rates-with-bamm-and-dr">Estimating Speciation Rates with BAMM and DR<a class="anchor" aria-label="anchor" href="#estimating-speciation-rates-with-bamm-and-dr"></a>
+</h2>
+<p>While the above example focused on using the
+<code><a href="../reference/estimate_MS.html">ssarp::estimate_ms()</a></code> function for estimating per-island
+speciation rates, <em>ssarp</em> also provides functionality for BAMM
+(Rabosky 2014) and DR (Jetz et al. 2012). These methods are described in
+detail in the “Estimate Speciation Rates” section above, so this section
+will focus on providing clear examples for their use in inferring
+SpARs.</p>
+<div class="section level3">
+<h3 id="estimating-speciation-rates-with-bamm">Estimating Speciation Rates with BAMM<a class="anchor" aria-label="anchor" href="#estimating-speciation-rates-with-bamm"></a>
+</h3>
+<p>The <code><a href="../reference/estimate_BAMM.html">ssarp::estimate_bamm()</a></code> function allows users to
+integrate their <code>eventdata</code> results from a <code>BAMM</code>
+run into <em>ssarp</em>’s SpAR workflow. More information about
+<code>BAMM</code>(Bayesian Analysis of Macroevolutionary Mixtures) <a href="http://bamm-project.org/" class="external-link">can be found on their documentation
+website</a>. The output from <code><a href="https://rdrr.io/pkg/BAMMtools/man/getEventData.html" class="external-link">BAMMtools::getEventData()</a></code> is a
+required parameter of <code><a href="../reference/estimate_BAMM.html">ssarp::estimate_bamm()</a></code>. The
+quickstart guide for <code>BAMMtools</code> <a href="http://bamm-project.org/postprocess.html" class="external-link">can also be found on
+their documentation website</a>.</p>
+<p>The steps for using <code><a href="../reference/estimate_BAMM.html">ssarp::estimate_bamm()</a></code> as part of
+the SpAR workflow are as follows:</p>
+<ul>
+<li>Run a <code>BAMM</code> analysis using the phylogeny of interest
+(this requires the <code>BAMM</code> application, which is external to
+R)</li>
+<li>Read in the event data file from the <code>BAMM</code> analysis into
+R using the <code>BAMMtools</code> R package</li>
+<li>Run <code><a href="../reference/estimate_BAMM.html">ssarp::estimate_bamm()</a></code> with your occurrence record
+dataset and eventdata object</li>
+</ul>
+<p>In this short example, we will use the <code>nocont_dat</code> object
+created in the main example above as the occurrence record input.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Read in event data file from an external BAMM run</span></span>
+<span><span class="va">event_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span>
+<span>                          <span class="st">"event_data_Patton_Anolis.txt"</span>,</span>
+<span>                           package <span class="op">=</span> <span class="st">"ssarp"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Run getEventData to import event data</span></span>
+<span><span class="va">edata</span> <span class="op">&lt;-</span> <span class="fu">BAMMtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BAMMtools/man/getEventData.html" class="external-link">getEventData</a></span><span class="op">(</span>phy <span class="op">=</span> <span class="va">tree</span>, eventdata <span class="op">=</span> <span class="va">event_data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Run estimate_bamm to associate tip speciation rates with occurrence records</span></span>
+<span><span class="va">speciation_occurrences</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_BAMM.html">estimate_bamm</a></span><span class="op">(</span>label_type <span class="op">=</span> <span class="st">"epithet"</span>, </span>
+<span>                                        occurrences <span class="op">=</span> <span class="va">nocont_dat</span>,</span>
+<span>                                        edata <span class="op">=</span> <span class="va">edata</span><span class="op">)</span></span>
+<span>                                        </span>
+<span><span class="co"># Infer SpAR</span></span>
+<span><span class="fu"><a href="../reference/create_SpAR.html">create_spar</a></span><span class="op">(</span>occurrences <span class="op">=</span> <span class="va">speciation_occurrences</span>, npsi <span class="op">=</span> <span class="fl">1</span>, visualize <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">##  ***Regression Model with Segmented Relationship(s)***</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Call: </span></span>
+<span><span class="co">## segmented.lm(obj = linear, seg.Z = ~x, npsi = 1, control = segmented::seg.control(display = FALSE))</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated Break-Point(s):</span></span>
+<span><span class="co">##           Est. St.Err</span></span>
+<span><span class="co">## psi1.x 25.048  0.215</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients of the linear terms:</span></span>
+<span><span class="co">##               Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span><span class="co">## (Intercept) -3.3941891  0.0124859 -271.842   &lt;2e-16 ***</span></span>
+<span><span class="co">## x           -0.0007567  0.0006448   -1.174    0.256  </span></span>
+<span><span class="co">## U1.x         0.0465122  0.0264435    1.759       NA </span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Residual standard error: 0.007177 on 18 degrees of freedom</span></span>
+<span><span class="co">## Multiple R-Squared: 0.2821,  Adjusted R-squared: 0.1625 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Boot restarting based on 6 samples. Last fit:</span></span>
+<span><span class="co">## Convergence attained in 3 iterations (rel. change 8.3049e-09)</span></span></code></pre>
+<p>Note how different the breakpoint and slopes are when
+<code>BAMM</code> tip rates are used to infer the SpAR compared to the
+first example using methodology from Magallón and Sanderson (2001):
+25.05 here versus 19.92 previously for the breakpoint, -7.6x10e-4 versus
+-8.30e-14 previously for the slope before the breakpoint, and 0.047
+versus 5.712e-03 previously for the slope after the breakpoint. The
+difference between how tip speciation rates are estimated in
+<code>BAMM</code> and how crown group speciation rates are calculated
+using Equation 4 from Magallón and Sanderson (2001) results in vastly
+different estimates for the regression parameters.</p>
+</div>
+<div class="section level3">
+<h3 id="estimating-speciation-rates-with-dr">Estimating Speciation Rates with DR<a class="anchor" aria-label="anchor" href="#estimating-speciation-rates-with-dr"></a>
+</h3>
+<p>The <code><a href="../reference/estimate_DR.html">ssarp::estimate_dr()</a></code> function returns tip speciation
+rate values obtained from running an adapted version of the
+“DR_statistic” function from Sun and Folk (2020). This function only
+requires a phylogenetic tree and occurrence records to estimate tip
+speciation rates. In this short example, we will use the
+<code>nocont_dat</code> and <code>tree</code> objects created during the
+first example in this vignette.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Run estimate_dr to associate tip speciation rates with occurrence records</span></span>
+<span><span class="va">speciation_occurrences</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_DR.html">estimate_dr</a></span><span class="op">(</span>tree <span class="op">=</span> <span class="va">tree</span>,</span>
+<span>                                      label_type <span class="op">=</span> <span class="st">"epithet"</span>,</span>
+<span>                                      occurrences <span class="op">=</span> <span class="va">nocont_dat</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Infer SpAR</span></span>
+<span><span class="fu"><a href="../reference/create_SpAR.html">create_spar</a></span><span class="op">(</span>occurrences <span class="op">=</span> <span class="va">speciation_occurrences</span>, npsi <span class="op">=</span> <span class="fl">1</span>, visualize <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Call: </span></span>
+<span><span class="co">## stats::lm(formula = y ~ x, data = dat)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Residuals:</span></span>
+<span><span class="co">##     Min      1Q  Median      3Q     Max </span></span>
+<span><span class="co">## -0.6146 -0.2271  0.1438  0.2055  0.2298 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##              Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span><span class="co">## (Intercept) -2.635986   0.382664  -6.889 1.08e-06 ***</span></span>
+<span><span class="co">## x           -0.005784   0.019150  -0.302    0.766    </span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Residual standard error: 0.2656 on 20 degrees of freedom</span></span>
+<span><span class="co">## Multiple R-squared:  0.004541,   Adjusted R-squared:  -0.04523 </span></span>
+<span><span class="co">## F-statistic: 0.09124 on 1 and 20 DF,  p-value: 0.7657</span></span></code></pre>
+<p>Note that when using DR to estimate tip speciation rates, the
+best-fit model for the SpAR is a linear regression. This result is
+entirely different compared to when <code><a href="../reference/estimate_MS.html">ssarp::estimate_ms()</a></code>
+and <code><a href="../reference/estimate_BAMM.html">ssarp::estimate_bamm()</a></code> are used, which highlights the
+importance of considering which method for estimating speciation rates
+most aligns with the evolutionary history of your system.</p>
+</div>
 <div class="section level3">
 <h3 id="literature-cited">Literature Cited<a class="anchor" aria-label="anchor" href="#literature-cited"></a>
 </h3>
@@ -294,7 +440,7 @@ Methods in Ecology and Evolution. 10: 821–834.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

@@ -1,0 +1,59 @@
+# Find the name of the land on which the occurrence points were found
+
+Use various mapping tools to attempt to find the names of land masses
+where the occurrence points were found.
+
+## Usage
+
+``` r
+find_land(occurrences, fillgaps = FALSE)
+```
+
+## Arguments
+
+- occurrences:
+
+  A dataframe output by
+  [`rgbif::occ_search()`](https://docs.ropensci.org/rgbif/reference/occ_search.html)
+  or
+  [`rgbif::occ_download()`](https://docs.ropensci.org/rgbif/reference/occ_download.html)
+  (or if using a custom dataframe, ensure that it has the following
+  columns: decimalLongitude, decimalLatitude, acceptedScientificName,
+  genericName, specificEpithet, datasetKey). The "datasetKey" column is
+  important for GBIF records and identifies the dataset to which the
+  occurrence record belongs. Custom dataframes without this style of
+  data organization should fill the column with placeholder values.
+
+- fillgaps:
+
+  (logical) Attempt to use Photon API to fill in gaps left by
+  `mapdata::map.where()` (TRUE) or only `mapdata::map.where()` results
+  (FALSE, default). While it is powerful, the Photon API does not have a
+  standard location for island names in its returned information, so
+  using it will likely require the returned dataframe to be cleaned by
+  the user.
+
+## Value
+
+A dataframe of the species name, longitude, latitude, and three parts of
+occurrence information. "first" is the name used to describe the largest
+possible area of land where the occurrence point is found. "second" is
+the name used to describe the second-largest possible area of land that
+corresponds with the occurrence point. "third" is the most specific area
+of land that corresponds with the occurrence point. Functions later in
+the ssarp pipeline default to checking whether "third" has an entry,
+then look at "second," and then "first."
+
+## Examples
+
+``` r
+# The GBIF key for the Anolis genus is 8782549
+# Read in example dataset filtered from:
+#  dat <- rgbif::occ_search(taxonKey = 8782549,
+#                           hasCoordinate = TRUE,
+#                           limit = 10000)
+dat <- read.csv(system.file("extdata",
+                            "ssarp_Example_Dat.csv",
+                            package = "ssarp"))
+occs <- find_land(occurrences = dat, fillgaps = FALSE)
+```

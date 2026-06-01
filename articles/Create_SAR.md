@@ -1,0 +1,420 @@
+# Construct a Species-Area Relationship with ssarp
+
+## Introduction
+
+A species-area relationship (SAR) visualizes the relationship between
+species richness (the number of species) and the area of the land mass
+on which the species live. The observation that species richness
+increases with increasing area is a fundamental law of ecology, and a
+disruption in this relationship may be associated with habitat loss,
+habitat fragmentation, and increasing numbers of non-native species.
+Creating SARs for island-dwelling species helps researchers understand
+how trends in biodiversity across archipelagos are changing due to these
+effects.
+
+The goal of this vignette is to use the *ssarp* R package to create a
+SAR for *Anolis*, a well-studied genus of lizards. We will focus on
+*Anolis* occurrence records from the Caribbean Islands. More information
+about the *ssarp* package and a comparison to a previously published SAR
+for *Anolis* can be found [in the manuscript associated with the
+package](https://www.biorxiv.org/content/10.1101/2024.12.31.630948v1).
+
+In order to construct a species-area relationship with *ssarp*, we will:
+
+- Gather occurrence data from GBIF
+- Filter out invalid occurrence records
+- Find areas of pertinent land masses
+- Create a species-area relationship
+
+At the end of this vignette, there are additional sections covering the
+use of presence-absence matrices (PAMs) to estimate a species-area
+relationship and detailing the ways the user can customize inputs to
+[`ssarp::find_areas()`](https://docs.ropensci.org/ssarp/reference/find_areas.md).
+
+## Gathering Occurrence Data
+
+GBIF (Global Biodiversity Information Facility) provides an easy method
+for gathering occurrence data for taxa of interest. *ssarp* uses
+functions from the *rgbif* package to gather occurrence records
+associated with a given taxon. The user may also provide their own data
+for use in creating a SAR, but we will use GBIF in this example.
+
+A tutorial for gathering occurrence records from GBIF can be found [in
+the “Get Occurrence Records from GBIF” vignette
+here](https://docs.ropensci.org/ssarp/articles/Get_Data.html). This
+example will use
+[`rgbif::occ_search()`](https://docs.ropensci.org/rgbif/reference/occ_search.html)
+for simplicity, but please note that
+[`rgbif::occ_download()`](https://docs.ropensci.org/rgbif/reference/occ_download.html)
+is more appropriate for gathering data used in research. Here, we will
+gather the first 10000 occurrence records for island-dwelling *Anolis*
+lizards in the Caribbean restricted by a WKT polygon (see the vignette
+linked above for more information).
+
+``` r
+
+# Load packages
+library(rgbif)
+library(ssarp)
+
+query <- "Anolis"
+rank <- "Genus"
+
+suggestions <- name_suggest(q = query, rank = rank)
+
+key <- as.numeric(suggestions$data[1,1])
+
+limit <- 10000
+
+occurrences <- occ_search(taxonKey = key, 
+                          hasCoordinate = TRUE, 
+                          limit = limit,
+                          geometry = 'POLYGON((-84.8 23.9, -84.7 16.4, -65.2 13.9, -63.1 11.0, -56.9 15.5, -60.5 21.9, -79.3 27.8, -79.8 24.8, -84.8 23.9))')
+
+dat <- occurrences$data
+```
+
+## Finding Land Mass Names and Areas
+
+Once the occurrence data is returned, we will use each occurrence
+record’s GPS point to determine the land mass on which the species was
+found and find the area associated with that land mass using a database
+of island areas and names from *ssarp*.
+
+``` r
+
+
+# Find land mass names
+land_dat <- find_land(occurrences = dat)
+
+# Print first 5 lines of land_dat
+head(land_dat, n = 5)
+```
+
+    ##                                                   SpeciesName  Genus      Species  Longitude  Latitude
+    ## 1 Anolis hispaniolae (Köhler, Zimmer, Mcgrath & Hedges, 2019) Anolis  hispaniolae -70.597156 19.098515
+    ## 2                                 Anolis distichus Cope, 1861 Anolis    distichus  -68.40635  18.67363
+    ## 3                            Anolis roquet (Bonnaterre, 1789) Anolis       roquet -60.893013  14.77053
+    ## 4                            Anolis roquet (Bonnaterre, 1789) Anolis       roquet -60.893013  14.77053
+    ## 5                  Anolis cristatellus Duméril & Bibron, 1837 Anolis cristatellus -66.123847 18.471217
+    ##                first second third                           datasetKey
+    ## 1 Dominican Republic   <NA>  <NA> 50c9509d-22c7-4a22-a47d-8c48425ef4a7
+    ## 2 Dominican Republic   <NA>  <NA> 50c9509d-22c7-4a22-a47d-8c48425ef4a7
+    ## 3         Martinique   <NA>  <NA> 50c9509d-22c7-4a22-a47d-8c48425ef4a7
+    ## 4         Martinique   <NA>  <NA> 50c9509d-22c7-4a22-a47d-8c48425ef4a7
+    ## 5               <NA>   <NA>  <NA> 50c9509d-22c7-4a22-a47d-8c48425ef4a7
+
+The locality information is split across three columns: “first,”
+“second,” and “third.” The mapping utilities that *ssarp* uses sometimes
+output different levels of specificity for locality information (up to
+three different levels), so these columns provide space for these
+different levels. The island name that we are interested in will be in
+the last filled-in column of the three. For example, if there are two
+columns of locality information for a given occurrence record, the
+island name will be in the second. If there is only one column of
+locality information, it will contain the island name (as with Puerto
+Rico and Antigua above). If all columns have `NA`, the occurrence record
+is invalid and will be filtered out in the next step.
+
+Now that we have determined the names of the land masses associated with
+each occurrence record, we will find the area associated with each land
+mass.
+
+``` r
+
+# Use the land mass names to get their areas
+area_dat <- find_areas(occs = land_dat)
+
+# Print first 5 lines of area_dat
+head(area_dat, n = 5)
+```
+
+    ##                                                   SpeciesName  Genus     Species  Longitude  Latitude
+    ## 1 Anolis hispaniolae (Köhler, Zimmer, Mcgrath & Hedges, 2019) Anolis hispaniolae -70.597156 19.098515
+    ## 2                                 Anolis distichus Cope, 1861 Anolis   distichus  -68.40635  18.67363
+    ## 3                            Anolis roquet (Bonnaterre, 1789) Anolis      roquet -60.893013  14.77053
+    ## 4                            Anolis roquet (Bonnaterre, 1789) Anolis      roquet -60.893013  14.77053
+    ## 8                            Anolis evermanni Stejneger, 1904 Anolis   evermanni -66.314592  18.29657
+    ##                first second third                           datasetKey       areas
+    ## 1 Dominican Republic   <NA>  <NA> 50c9509d-22c7-4a22-a47d-8c48425ef4a7 83104562500
+    ## 2 Dominican Republic   <NA>  <NA> 50c9509d-22c7-4a22-a47d-8c48425ef4a7 83104562500
+    ## 3         Martinique   <NA>  <NA> 50c9509d-22c7-4a22-a47d-8c48425ef4a7  1190000000
+    ## 4         Martinique   <NA>  <NA> 50c9509d-22c7-4a22-a47d-8c48425ef4a7  1190000000
+    ## 8        Puerto Rico   <NA>  <NA> 50c9509d-22c7-4a22-a47d-8c48425ef4a7  9710687500
+
+Now, our occurrence record dataframe includes records with GPS points
+that are associated with a land mass, along with the areas of those land
+masses (in m^2).
+
+The
+[`ssarp::remove_continents()`](https://docs.ropensci.org/ssarp/reference/remove_continents.md)
+function removes any continental occurrence records, which is useful
+when the user is only interested in island-dwelling species (as we are
+in this example). While the data obtained by using the
+[`rgbif::occ_search()`](https://docs.ropensci.org/rgbif/reference/occ_search.html)
+function was geographically restricted, potential user error in
+specifying the polygon in WKT format often leads to accidental
+continental records that will be removed by using this function.
+
+``` r
+
+nocont_dat <- remove_continents(occs = area_dat)
+```
+
+## Create Species-Area Relationship
+
+Finally, we will generate the SAR using the
+[`ssarp::create_sar()`](https://docs.ropensci.org/ssarp/reference/create_SAR.md)
+function (can also be run with
+[`create_SAR()`](https://docs.ropensci.org/ssarp/reference/create_SAR.md)).
+The
+[`ssarp::create_sar()`](https://docs.ropensci.org/ssarp/reference/create_SAR.md)
+function creates multiple regression objects with breakpoints up to the
+user-specified “npsi” parameter. For example, if “npsi” is two,
+[`ssarp::create_sar()`](https://docs.ropensci.org/ssarp/reference/create_SAR.md)
+will generate regression objects with zero (linear regression), one, and
+two breakpoints. The function will then return the regression object
+with the lowest AIC score. The “npsi” parameter will be set to one in
+this example. Note that if linear regression (zero breakpoints) is
+better-supported than segmented regression with one breakpoint, the
+linear regression will be returned instead. We set the “visualize”
+parameter to `TRUE` so that the function outputs the plot of the SAR.
+
+``` r
+
+ssarp::create_sar(occurrences = nocont_dat, npsi = 1, visualize = TRUE)
+```
+
+    ## 
+    ##  ***Regression Model with Segmented Relationship(s)***
+    ## 
+    ## Call: 
+    ## segmented.lm(obj = linear, seg.Z = ~x, npsi = 1, control = segmented::seg.control(display = FALSE))
+    ## 
+    ## Estimated Break-Point(s):
+    ##           Est. St.Err
+    ## psi1.x 22.429  0.482
+    ## 
+    ## Coefficients of the linear terms:
+    ##             Estimate Std. Error t value Pr(>|t|)
+    ## (Intercept) -0.08563    1.00429  -0.085    0.933
+    ## x            0.04440    0.05412   0.820    0.419
+    ## U1.x         0.92566    0.20603   4.493       NA
+    ## 
+    ## Residual standard error: 0.5381 on 28 degrees of freedom
+    ## Multiple R-Squared: 0.6864,  Adjusted R-squared: 0.6528 
+    ## 
+    ## Boot restarting based on 9 samples. Last fit:
+    ## Convergence attained in 2 iterations (rel. change 2.8018e-09)
+
+![Figure 2. This is the species-area relationship (SAR) for Anolis
+including island-based occurrences within a polygon around Caribbean
+islands from the first 10000 records for the genus in GBIF! The best-fit
+model was a segmented regression with one breakpoint.](anolis_SAR-1.png)
+
+Figure 2. This is the species-area relationship (SAR) for *Anolis*
+including island-based occurrences within a polygon around Caribbean
+islands from the first 10000 records for the genus in GBIF! The best-fit
+model was a segmented regression with one breakpoint.
+
+The
+[`ssarp::create_sar()`](https://docs.ropensci.org/ssarp/reference/create_SAR.md)
+function will also output the summary for the best-fit model for the
+data (displayed above). This summary includes a few important pieces of
+information to highlight. First, the `Est` column of `psi1.x` displays
+the location of the breakpoint on the x-axis. Next, the table of
+`Coefficients of the linear terms` includes estimates (located in the
+`Estimate` column) for the following terms: the y-intercept
+(`(Intercept)`), the slope before the breakpoint (`x`), and the slope
+after the breakpoint (`U1.x`). In this example, to three signifcant
+figures, we would report that the breakpoint is at 22.4, the slope
+before the breakpoint is 0.0444, and the slope after the breakpoint is
+0.926.
+
+## Using a Presence-Absence Matrix to Infer a SAR
+
+In a presence-absence matrix (PAM), the column names are species names
+and the row names are island names. Within each species column, a 1
+represents the presence of that species on the island corresponding to
+the given row, and a 0 represents the absence of that species on the
+island corresponding to the given row.
+
+Using a PAM for species richness data in the *ssarp* workflow allows the
+user to skip the data curation steps discussed in the “Gathering
+Occurrence Data” section here. The following code reads an example PAM
+that is built into the *ssarp* package. Then, it uses that PAM as an
+input to the
+[`ssarp::find_pam_areas()`](https://docs.ropensci.org/ssarp/reference/find_pam_areas.md)
+function to generate the same style of dataframe that the
+[`ssarp::find_areas()`](https://docs.ropensci.org/ssarp/reference/find_areas.md)
+function created above.
+
+``` r
+
+# Load ssarp
+library(ssarp)
+
+# Read example PAM file
+pam <- read.csv(system.file("extdata",
+                            "example_pam.csv",
+                            package = "ssarp"))
+
+# Create dataframe that includes areas
+area_dat <- ssarp::find_pam_areas(pam = pam)
+
+# Print first 5 lines of area_dat
+head(area_dat, n = 5)
+```
+
+    ##   genericName specificEpithet    third first second     areas
+    ## 1      Anolis       distichus  Hog Cay  <NA>   <NA> 3.125e+06
+    ## 2      Anolis          sagrei  Hog Cay  <NA>   <NA> 3.125e+06
+    ## 3      Anolis          sagrei Anguilla  <NA>   <NA> 2.200e+07
+    ## 4      Anolis        allisoni     Cuba  <NA>   <NA> 1.220e+11
+    ## 5      Anolis          sagrei     Cuba  <NA>   <NA> 1.220e+11
+
+In the code above, the
+[`ssarp::find_pam_areas()`](https://docs.ropensci.org/ssarp/reference/find_pam_areas.md)
+function was used with the example PAM to create a dataframe
+(`area_dat`) that can be used directly with
+[`ssarp::create_sar()`](https://docs.ropensci.org/ssarp/reference/create_SAR.md)
+in the same way as in the “Finding Land Mass Names and Areas” section.
+
+``` r
+
+create_sar(occurrences = area_dat, npsi = 1, visualize = FALSE)
+```
+
+    ## 
+    ##  ***Regression Model with Segmented Relationship(s)***
+    ## 
+    ## Call: 
+    ## segmented.lm(obj = linear, seg.Z = ~x, npsi = 1, control = segmented::seg.control(display = FALSE))
+    ## 
+    ## Estimated Break-Point(s):
+    ##           Est. St.Err
+    ## psi1.x 21.463   0.66
+    ## 
+    ## Coefficients of the linear terms:
+    ##             Estimate Std. Error t value Pr(>|t|)
+    ## (Intercept) -0.17060    1.25280  -0.136    0.893
+    ## x            0.02970    0.06606   0.450    0.658
+    ## U1.x         0.69862    0.16744   4.172       NA
+    ## 
+    ## Residual standard error: 0.4165 on 18 degrees of freedom
+    ## Multiple R-Squared: 0.8449,  Adjusted R-squared: 0.8191 
+    ## 
+    ## Boot restarting based on 6 samples. Last fit:
+    ## Convergence attained in 2 iterations (rel. change 2.7106e-09)
+
+Please note that while the example PAM represents *Anolis* occurrence
+data, it does not include exactly the same species, so the breakpoint
+and slopes here are different compared to the first SAR inferred in this
+vignette.
+
+## Customizing Inputs to find_areas()
+
+The
+[`ssarp::find_areas()`](https://docs.ropensci.org/ssarp/reference/find_areas.md)
+function provides multiple options for users to customize how *ssarp*
+finds land mass areas. By default, the
+[`ssarp::find_areas()`](https://docs.ropensci.org/ssarp/reference/find_areas.md)
+function uses a built-in database of island names and areas that is
+queried by island names present in the user’s occurrence records. Users
+may access this database directly by running the
+[`ssarp::get_island_areas()`](https://docs.ropensci.org/ssarp/reference/get_island_areas.md)
+function as written below:
+
+``` r
+
+# Access the island area database (returns a dataframe)
+island_areas <- get_island_areas()
+
+# The first 5 rows of island_areas
+head(island_areas, n = 5)
+```
+
+    ##   OBJECTID_1 COUNT    AREA MAX           Name
+    ## 1       6614   123 7687500  22         ‘Uqbān
+    ## 2      80233    10  625000   4         ‘Ushsh
+    ## 3      87448     2  125000   0         A Chau
+    ## 4       5277    33 2062500  30 A Illa da Toxa
+    ## 5      12313    27 1687500 109       A Quatre
+
+The `island_areas` object includes 5 columns:
+
+- `OBJECTID_1`: The object ID for the island within the global island
+  shapefiles used to compile the area database ([see Martinet et
+  al. 2025](https://www.biorxiv.org/content/10.1101/2024.12.31.630948v1)
+  for more details).
+- `COUNT`: The number of polygons covered by the island as calculated by
+  ArcGIS ([see Martinet et
+  al. 2025](https://www.biorxiv.org/content/10.1101/2024.12.31.630948v1)
+  for more details)
+- `AREA`: The area of the island
+- `MAX`: The maximum elevation of the island (in meters)
+- `Name`: The name of the island
+
+If you notice inaccuracies in this built-in island dataset, please
+follow the steps outlined in *ssarp*’s [contributing
+guidelines](https://docs.ropensci.org/ssarp/CONTRIBUTING.html) to fix
+those inaccuracies. Thank you for helping make our package more accurate
+for everybody!
+
+### Custom Area Dataframes
+
+Users may also bypass the built-in island database by inputting their
+own custom area dataframe when running
+[`ssarp::find_areas()`](https://docs.ropensci.org/ssarp/reference/find_areas.md).
+This option is particularly useful when the user is inferring SARs for
+isolated systems that are not oceanic islands (e.g., habitat fragments,
+mountain peaks). This custom dataframe must have two columns: (1) a
+column called “AREA” containing each land mass’s area and (2) a column
+called “Name” containing each land mass’s name. An example of a custom
+dataframe that could be used with
+[`ssarp::find_areas()`](https://docs.ropensci.org/ssarp/reference/find_areas.md)
+is below:
+
+``` r
+
+# A vector of names
+names <- c("Kanto", "Kansai", "Kyushu")
+
+# A vector of matching areas
+areas <- c(32424, 33124, 36782)
+
+# Create a dataframe of names and areas
+area_custom <- as.data.frame(cbind(names, areas))
+
+# Add required column names
+colnames(area_custom) <- c("Name", "AREA")
+
+# Ensure that the AREA column is numeric
+area_custom$AREA <- as.numeric(area_custom$AREA)
+```
+
+### Query a Shapefile for Areas
+
+The final way that
+[`ssarp::find_areas()`](https://docs.ropensci.org/ssarp/reference/find_areas.md)
+can associate land mass areas with occurrence records is through the use
+of shapefiles. If a user inputs a shapefile containing spatial
+information for the geographic locations of interest, *ssarp* will
+directly query that shapefile using GPS coordinates from the occurrence
+record input (`occs`). The area of the polygon on which the GPS
+coordinate lands will be returned for that row. Shapefiles used in this
+way must:
+
+- Be of class `SpatVector`
+- Include named polygons (i.e., *ssarp* needs to be able to index the
+  `SpatVector` using `shapefile$name`)
+- Use a coordinate reference system (CRS) that makes sense for the
+  coordinates in your occurrence record input
+
+If the user would prefer to restrict which polygons in the shapefile are
+included in the returned occurrence record dataframe, they can be
+specified as a vector to the `names` parameter of
+[`ssarp::find_areas()`](https://docs.ropensci.org/ssarp/reference/find_areas.md).
+Otherwise, all non-NA names in the shapefile will be included. This
+option is especially useful for reducing processing time if the user is
+only interested in a small portion of a larger shapefile.

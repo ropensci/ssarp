@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Construct a Species-Area Relationship with ssarp • ssarp</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Construct a Species-Area Relationship with ssarp">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ssarp</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,6 +93,10 @@ the manuscript associated with the package</a>.</p>
 <li>Find areas of pertinent land masses</li>
 <li>Create a species-area relationship</li>
 </ul>
+<p>At the end of this vignette, there are additional sections covering
+the use of presence-absence matrices (PAMs) to estimate a species-area
+relationship and detailing the ways the user can customize inputs to
+<code><a href="../reference/find_areas.html">ssarp::find_areas()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="gathering-occurrence-data">Gathering Occurrence Data<a class="anchor" aria-label="anchor" href="#gathering-occurrence-data"></a>
@@ -103,7 +107,7 @@ method for gathering occurrence data for taxa of interest.
 occurrence records associated with a given taxon. The user may also
 provide their own data for use in creating a SAR, but we will use GBIF
 in this example.</p>
-<p>A tutorial for gathering occurrence records from GBIF can be found <a href="https://kmartinet.github.io/ssarp/articles/Get_Data.html" class="external-link">in the
+<p>A tutorial for gathering occurrence records from GBIF can be found <a href="https://docs.ropensci.org/ssarp/articles/Get_Data.html">in the
 “Get Occurrence Records from GBIF” vignette here</a>. This example will
 use <code><a href="https://docs.ropensci.org/rgbif/reference/occ_search.html" class="external-link">rgbif::occ_search()</a></code> for simplicity, but please note
 that <code><a href="https://docs.ropensci.org/rgbif/reference/occ_download.html" class="external-link">rgbif::occ_download()</a></code> is more appropriate for
@@ -152,7 +156,7 @@ of island areas and names from <em>ssarp</em>.</p>
 <span><span class="co">## 3                            Anolis roquet (Bonnaterre, 1789) Anolis       roquet -60.893013  14.77053</span></span>
 <span><span class="co">## 4                            Anolis roquet (Bonnaterre, 1789) Anolis       roquet -60.893013  14.77053</span></span>
 <span><span class="co">## 5                  Anolis cristatellus Duméril &amp; Bibron, 1837 Anolis cristatellus -66.123847 18.471217</span></span>
-<span><span class="co">##                First Second Third                           datasetKey</span></span>
+<span><span class="co">##                first second third                           datasetKey</span></span>
 <span><span class="co">## 1 Dominican Republic   &lt;NA&gt;  &lt;NA&gt; 50c9509d-22c7-4a22-a47d-8c48425ef4a7</span></span>
 <span><span class="co">## 2 Dominican Republic   &lt;NA&gt;  &lt;NA&gt; 50c9509d-22c7-4a22-a47d-8c48425ef4a7</span></span>
 <span><span class="co">## 3         Martinique   &lt;NA&gt;  &lt;NA&gt; 50c9509d-22c7-4a22-a47d-8c48425ef4a7</span></span>
@@ -185,7 +189,7 @@ land mass.</p>
 <span><span class="co">## 3                            Anolis roquet (Bonnaterre, 1789) Anolis      roquet -60.893013  14.77053</span></span>
 <span><span class="co">## 4                            Anolis roquet (Bonnaterre, 1789) Anolis      roquet -60.893013  14.77053</span></span>
 <span><span class="co">## 8                            Anolis evermanni Stejneger, 1904 Anolis   evermanni -66.314592  18.29657</span></span>
-<span><span class="co">##                First Second Third                           datasetKey       areas</span></span>
+<span><span class="co">##                first second third                           datasetKey       areas</span></span>
 <span><span class="co">## 1 Dominican Republic   &lt;NA&gt;  &lt;NA&gt; 50c9509d-22c7-4a22-a47d-8c48425ef4a7 83104562500</span></span>
 <span><span class="co">## 2 Dominican Republic   &lt;NA&gt;  &lt;NA&gt; 50c9509d-22c7-4a22-a47d-8c48425ef4a7 83104562500</span></span>
 <span><span class="co">## 3         Martinique   &lt;NA&gt;  &lt;NA&gt; 50c9509d-22c7-4a22-a47d-8c48425ef4a7  1190000000</span></span>
@@ -222,6 +226,27 @@ instead. We set the “visualize” parameter to <code>TRUE</code> so that
 the function outputs the plot of the SAR.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ssarp</span><span class="fu">::</span><span class="fu"><a href="../reference/create_SAR.html">create_sar</a></span><span class="op">(</span>occurrences <span class="op">=</span> <span class="va">nocont_dat</span>, npsi <span class="op">=</span> <span class="fl">1</span>, visualize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">##  ***Regression Model with Segmented Relationship(s)***</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Call: </span></span>
+<span><span class="co">## segmented.lm(obj = linear, seg.Z = ~x, npsi = 1, control = segmented::seg.control(display = FALSE))</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated Break-Point(s):</span></span>
+<span><span class="co">##           Est. St.Err</span></span>
+<span><span class="co">## psi1.x 22.429  0.482</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients of the linear terms:</span></span>
+<span><span class="co">##             Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span><span class="co">## (Intercept) -0.08563    1.00429  -0.085    0.933</span></span>
+<span><span class="co">## x            0.04440    0.05412   0.820    0.419</span></span>
+<span><span class="co">## U1.x         0.92566    0.20603   4.493       NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Residual standard error: 0.5381 on 28 degrees of freedom</span></span>
+<span><span class="co">## Multiple R-Squared: 0.6864,  Adjusted R-squared: 0.6528 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Boot restarting based on 9 samples. Last fit:</span></span>
+<span><span class="co">## Convergence attained in 2 iterations (rel. change 2.8018e-09)</span></span></code></pre>
 <div class="float">
 <img src="anolis_SAR-1.png" alt="Figure 2. This is the species-area relationship (SAR) for Anolis including island-based occurrences within a polygon around Caribbean islands from the first 10000 records for the genus in GBIF! The best-fit model was a segmented regression with one breakpoint."><div class="figcaption">Figure 2. This is the species-area relationship
 (SAR) for <em>Anolis</em> including island-based occurrences within a
@@ -230,7 +255,186 @@ genus in GBIF! The best-fit model was a segmented regression with one
 breakpoint.</div>
 </div>
 <p>The <code><a href="../reference/create_SAR.html">ssarp::create_sar()</a></code> function will also output the
-summary for the best-fit model for the data (displayed above).</p>
+summary for the best-fit model for the data (displayed above). This
+summary includes a few important pieces of information to highlight.
+First, the <code>Est</code> column of <code>psi1.x</code> displays the
+location of the breakpoint on the x-axis. Next, the table of
+<code>Coefficients of the linear terms</code> includes estimates
+(located in the <code>Estimate</code> column) for the following terms:
+the y-intercept (<code>(Intercept)</code>), the slope before the
+breakpoint (<code>x</code>), and the slope after the breakpoint
+(<code>U1.x</code>). In this example, to three signifcant figures, we
+would report that the breakpoint is at 22.4, the slope before the
+breakpoint is 0.0444, and the slope after the breakpoint is 0.926.</p>
+</div>
+<div class="section level2">
+<h2 id="using-a-presence-absence-matrix-to-infer-a-sar">Using a Presence-Absence Matrix to Infer a SAR<a class="anchor" aria-label="anchor" href="#using-a-presence-absence-matrix-to-infer-a-sar"></a>
+</h2>
+<p>In a presence-absence matrix (PAM), the column names are species
+names and the row names are island names. Within each species column, a
+1 represents the presence of that species on the island corresponding to
+the given row, and a 0 represents the absence of that species on the
+island corresponding to the given row.</p>
+<p>Using a PAM for species richness data in the <em>ssarp</em> workflow
+allows the user to skip the data curation steps discussed in the
+“Gathering Occurrence Data” section here. The following code reads an
+example PAM that is built into the <em>ssarp</em> package. Then, it uses
+that PAM as an input to the <code><a href="../reference/find_pam_areas.html">ssarp::find_pam_areas()</a></code>
+function to generate the same style of dataframe that the
+<code><a href="../reference/find_areas.html">ssarp::find_areas()</a></code> function created above.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Load ssarp</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/ssarp">ssarp</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Read example PAM file</span></span>
+<span><span class="va">pam</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,</span>
+<span>                            <span class="st">"example_pam.csv"</span>,</span>
+<span>                            package <span class="op">=</span> <span class="st">"ssarp"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create dataframe that includes areas</span></span>
+<span><span class="va">area_dat</span> <span class="op">&lt;-</span> <span class="fu">ssarp</span><span class="fu">::</span><span class="fu"><a href="../reference/find_pam_areas.html">find_pam_areas</a></span><span class="op">(</span>pam <span class="op">=</span> <span class="va">pam</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Print first 5 lines of area_dat</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">area_dat</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   genericName specificEpithet    third first second     areas</span></span>
+<span><span class="co">## 1      Anolis       distichus  Hog Cay  &lt;NA&gt;   &lt;NA&gt; 3.125e+06</span></span>
+<span><span class="co">## 2      Anolis          sagrei  Hog Cay  &lt;NA&gt;   &lt;NA&gt; 3.125e+06</span></span>
+<span><span class="co">## 3      Anolis          sagrei Anguilla  &lt;NA&gt;   &lt;NA&gt; 2.200e+07</span></span>
+<span><span class="co">## 4      Anolis        allisoni     Cuba  &lt;NA&gt;   &lt;NA&gt; 1.220e+11</span></span>
+<span><span class="co">## 5      Anolis          sagrei     Cuba  &lt;NA&gt;   &lt;NA&gt; 1.220e+11</span></span></code></pre>
+<p>In the code above, the <code><a href="../reference/find_pam_areas.html">ssarp::find_pam_areas()</a></code> function
+was used with the example PAM to create a dataframe
+(<code>area_dat</code>) that can be used directly with
+<code><a href="../reference/create_SAR.html">ssarp::create_sar()</a></code> in the same way as in the “Finding Land
+Mass Names and Areas” section.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/create_SAR.html">create_sar</a></span><span class="op">(</span>occurrences <span class="op">=</span> <span class="va">area_dat</span>, npsi <span class="op">=</span> <span class="fl">1</span>, visualize <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">##  ***Regression Model with Segmented Relationship(s)***</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Call: </span></span>
+<span><span class="co">## segmented.lm(obj = linear, seg.Z = ~x, npsi = 1, control = segmented::seg.control(display = FALSE))</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated Break-Point(s):</span></span>
+<span><span class="co">##           Est. St.Err</span></span>
+<span><span class="co">## psi1.x 21.463   0.66</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients of the linear terms:</span></span>
+<span><span class="co">##             Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span><span class="co">## (Intercept) -0.17060    1.25280  -0.136    0.893</span></span>
+<span><span class="co">## x            0.02970    0.06606   0.450    0.658</span></span>
+<span><span class="co">## U1.x         0.69862    0.16744   4.172       NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Residual standard error: 0.4165 on 18 degrees of freedom</span></span>
+<span><span class="co">## Multiple R-Squared: 0.8449,  Adjusted R-squared: 0.8191 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Boot restarting based on 6 samples. Last fit:</span></span>
+<span><span class="co">## Convergence attained in 2 iterations (rel. change 2.7106e-09)</span></span></code></pre>
+<p>Please note that while the example PAM represents <em>Anolis</em>
+occurrence data, it does not include exactly the same species, so the
+breakpoint and slopes here are different compared to the first SAR
+inferred in this vignette.</p>
+</div>
+<div class="section level2">
+<h2 id="customizing-inputs-to-find_areas">Customizing Inputs to find_areas()<a class="anchor" aria-label="anchor" href="#customizing-inputs-to-find_areas"></a>
+</h2>
+<p>The <code><a href="../reference/find_areas.html">ssarp::find_areas()</a></code> function provides multiple
+options for users to customize how <em>ssarp</em> finds land mass areas.
+By default, the <code><a href="../reference/find_areas.html">ssarp::find_areas()</a></code> function uses a
+built-in database of island names and areas that is queried by island
+names present in the user’s occurrence records. Users may access this
+database directly by running the <code><a href="../reference/get_island_areas.html">ssarp::get_island_areas()</a></code>
+function as written below:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Access the island area database (returns a dataframe)</span></span>
+<span><span class="va">island_areas</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_island_areas.html">get_island_areas</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The first 5 rows of island_areas</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">island_areas</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   OBJECTID_1 COUNT    AREA MAX           Name</span></span>
+<span><span class="co">## 1       6614   123 7687500  22         ‘Uqbān</span></span>
+<span><span class="co">## 2      80233    10  625000   4         ‘Ushsh</span></span>
+<span><span class="co">## 3      87448     2  125000   0         A Chau</span></span>
+<span><span class="co">## 4       5277    33 2062500  30 A Illa da Toxa</span></span>
+<span><span class="co">## 5      12313    27 1687500 109       A Quatre</span></span></code></pre>
+<p>The <code>island_areas</code> object includes 5 columns:</p>
+<ul>
+<li>
+<code>OBJECTID_1</code>: The object ID for the island within the
+global island shapefiles used to compile the area database (<a href="https://www.biorxiv.org/content/10.1101/2024.12.31.630948v1" class="external-link">see
+Martinet et al. 2025</a> for more details).</li>
+<li>
+<code>COUNT</code>: The number of polygons covered by the island as
+calculated by ArcGIS (<a href="https://www.biorxiv.org/content/10.1101/2024.12.31.630948v1" class="external-link">see
+Martinet et al. 2025</a> for more details)</li>
+<li>
+<code>AREA</code>: The area of the island</li>
+<li>
+<code>MAX</code>: The maximum elevation of the island (in
+meters)</li>
+<li>
+<code>Name</code>: The name of the island</li>
+</ul>
+<p>If you notice inaccuracies in this built-in island dataset, please
+follow the steps outlined in <em>ssarp</em>’s <a href="https://docs.ropensci.org/ssarp/CONTRIBUTING.html">contributing
+guidelines</a> to fix those inaccuracies. Thank you for helping make our
+package more accurate for everybody!</p>
+<div class="section level3">
+<h3 id="custom-area-dataframes">Custom Area Dataframes<a class="anchor" aria-label="anchor" href="#custom-area-dataframes"></a>
+</h3>
+<p>Users may also bypass the built-in island database by inputting their
+own custom area dataframe when running <code><a href="../reference/find_areas.html">ssarp::find_areas()</a></code>.
+This option is particularly useful when the user is inferring SARs for
+isolated systems that are not oceanic islands (e.g., habitat fragments,
+mountain peaks). This custom dataframe must have two columns: (1) a
+column called “AREA” containing each land mass’s area and (2) a column
+called “Name” containing each land mass’s name. An example of a custom
+dataframe that could be used with <code><a href="../reference/find_areas.html">ssarp::find_areas()</a></code> is
+below:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># A vector of names</span></span>
+<span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Kanto"</span>, <span class="st">"Kansai"</span>, <span class="st">"Kyushu"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># A vector of matching areas</span></span>
+<span><span class="va">areas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">32424</span>, <span class="fl">33124</span>, <span class="fl">36782</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create a dataframe of names and areas</span></span>
+<span><span class="va">area_custom</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">names</span>, <span class="va">areas</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Add required column names</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">area_custom</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"AREA"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Ensure that the AREA column is numeric</span></span>
+<span><span class="va">area_custom</span><span class="op">$</span><span class="va">AREA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">area_custom</span><span class="op">$</span><span class="va">AREA</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="query-a-shapefile-for-areas">Query a Shapefile for Areas<a class="anchor" aria-label="anchor" href="#query-a-shapefile-for-areas"></a>
+</h3>
+<p>The final way that <code><a href="../reference/find_areas.html">ssarp::find_areas()</a></code> can associate
+land mass areas with occurrence records is through the use of
+shapefiles. If a user inputs a shapefile containing spatial information
+for the geographic locations of interest, <em>ssarp</em> will directly
+query that shapefile using GPS coordinates from the occurrence record
+input (<code>occs</code>). The area of the polygon on which the GPS
+coordinate lands will be returned for that row. Shapefiles used in this
+way must:</p>
+<ul>
+<li>Be of class <code>SpatVector</code>
+</li>
+<li>Include named polygons (i.e., <em>ssarp</em> needs to be able to
+index the <code>SpatVector</code> using
+<code>shapefile$name</code>)</li>
+<li>Use a coordinate reference system (CRS) that makes sense for the
+coordinates in your occurrence record input</li>
+</ul>
+<p>If the user would prefer to restrict which polygons in the shapefile
+are included in the returned occurrence record dataframe, they can be
+specified as a vector to the <code>names</code> parameter of
+<code><a href="../reference/find_areas.html">ssarp::find_areas()</a></code>. Otherwise, all non-NA names in the
+shapefile will be included. This option is especially useful for
+reducing processing time if the user is only interested in a small
+portion of a larger shapefile.</p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -243,7 +447,7 @@ summary for the best-fit model for the data (displayed above).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
