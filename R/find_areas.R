@@ -92,7 +92,7 @@ find_areas <- function(
     # If the custom area dataframe is actually a tibble, it'll pass the above
     #  check but then the function will return nothing. Give users a warning.
     if(checkmate::testTibble(area_custom)){
-      cli::cli_alert_warning("Custom areas input is a tibble. Please input a data.frame instead.")
+      stop("Custom areas input is a tibble. Please input a data.frame instead.")
     }
   }
   
@@ -255,10 +255,6 @@ find_areas <- function(
         areas[i] <- NA
       }
     }
-
-    # If a tbl_df is input for area_custom, areas is a list instead of a vector
-    # Unlist areas just in case this happens
-    areas <- unlist(areas)
     
     # Create final dataframe
     occs_final <- cbind(occs, areas)
