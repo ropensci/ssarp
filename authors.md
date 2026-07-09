@@ -24,17 +24,20 @@
 Source:
 [`inst/CITATION`](https://github.com/ropensci/ssarp/blob/main/inst/CITATION)
 
-Martinet KM, Román-Palacios C, Harmon LJ (2025). “SSARP: An R Package
-for Easily Creating Species- and Speciation- Area Relationships Using
-Web Databases.” *bioRxiv*.
-[doi:10.1101/2024.12.31.630948](https://doi.org/10.1101/2024.12.31.630948).
-<https://www.biorxiv.org/content/10.1101/2024.12.31.630948v1>.
+Martinet KM, Román-Palacios C, Harmon LJ (2026). “ssarp: An R Package
+for Efficiently Inferring Species- and Speciation-Area Relationships.”
+*Ecology and Evolution*, **16**(7), e73981.
+[doi:10.1002/ece3.73981](https://doi.org/10.1002/ece3.73981).
+<https://onlinelibrary.wiley.com/doi/abs/10.1002/ece3.73981>.
 
     @Article{,
-      title = {SSARP: An R Package for Easily Creating Species- and Speciation- Area Relationships Using Web Databases},
+      title = {ssarp: An R Package for Efficiently Inferring Species- and Speciation-Area Relationships},
       author = {Kristen M. Martinet and Cristian Román-Palacios and Luke J. Harmon},
-      journal = {bioRxiv},
-      year = {2025},
-      doi = {https://doi.org/10.1101/2024.12.31.630948},
-      url = {https://www.biorxiv.org/content/10.1101/2024.12.31.630948v1},
+      journal = {Ecology and Evolution},
+      year = {2026},
+      volume = {16},
+      number = {7},
+      pages = {e73981},
+      doi = {https://doi.org/10.1002/ece3.73981},
+      url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/ece3.73981},
     }
