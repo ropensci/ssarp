@@ -41,9 +41,8 @@ richness decreasing as islands get larger instead of increasing). An
 unusual trend in these relationships may be indicative of habitat loss
 or a negative impact of non-native species.
 
-Please find the [bioRxiv preprint of the manuscript associated with
-*ssarp*
-here!](https://www.biorxiv.org/content/10.1101/2024.12.31.630948v1)
+Please find the [manuscript associated with *ssarp*
+here!](https://onlinelibrary.wiley.com/doi/10.1002/ece3.73981)
 
 Please note that this package is released with a [Contributor Code of
 Conduct](https://ropensci.org/code-of-conduct/). By contributing to this
@@ -75,9 +74,10 @@ before using any of *ssarp*’s functions.
 
 Please cite *ssarp* if you use it for your work! The citation is:
 
-Martinet, K.M., Román-Palacios, C., & Harmon, L.J. (2025). “SSARP: An R
-Package for Easily Creating Species- and Speciation- Area Relationships
-Using Web Databases.” *bioRxiv*. <doi:10.1101/2024.12.31.630948>
+Martinet, K.M., Román-Palacios, C., & Harmon, L.J. (2026). 
+“ssarp: An R Package for Efficiently Inferring Species- and Speciation-Area 
+Relationships.” _Ecology and Evolution_, 16(7): e73981. 
+doi: 10.1002/ece3.73981. 
 
 ## Extending Your SAR Analysees
 
